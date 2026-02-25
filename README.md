@@ -26,7 +26,7 @@ As I mentioned before it is perfectly reasonable for everyone to have their char
 ### Option 1: Staying local
 This is the easier, more traditional route. After downloading the HTML file you are able to open it within any browser of your choice. 
 ### Option 2: Going Online
-There is more initial setup needed for this option, but it should not take over 15 minutes even if you have never done anything like this before. I will take you through a step by step guide.
+There is more initial setup needed for this option, but it should not take over 15 minutes even if you have never done anything like this before. **I will take you through a click by click guide for complett beginners.**
 
 1. Create a new folder on your computer. For better organisation all of your downloaded files should go here for now.
 2. Withing the files you will find an `index.html` template. Download it into your folder and make sure not to change the name from `index.html`!
@@ -38,9 +38,35 @@ _Now we will need to point `index.html` to the character sheets._
 
 <img width="651" height="199" alt="14388" src="https://github.com/user-attachments/assets/a519c819-8a3c-4e75-bb4f-dbe8fe14a6eb" />
 
-
 _For the next steps, you will need a GitHub account._
 
+5. On the [github.com](https://github.com/) Dashboard page you need to create a new repository. Give it a name, set it to private and add a README.
+
+<img width="1872" height="1818" alt="image" src="https://github.com/user-attachments/assets/f79a8a46-b8e6-479a-94fd-5461892b25f3" />
+
+6. Click here and upload the files from your local folder including `index.html`...
+
+<img width="1472" height="728" alt="image" src="https://github.com/user-attachments/assets/57cce722-9a32-4e0e-a1d5-7274cde6284a" />
+
+7. ...and commit the changes. _(Make sure again that the filename of `index.html` was not changed.)_
+
+<img width="2535" height="1169" alt="image" src="https://github.com/user-attachments/assets/d352fa84-cd47-4e70-82f3-efa8a4635a19" />
+
+_Now that your files live online, you can decide to keep them on your computer or delete them. For the next steps, you will need a Netlify account. You can even sign up with your new GitHub account._
+
+8. After logging in, create your first 'Team' for free and click 'Add New Project'. Since we created the GitHub repository with your files, you should select 'Import from an existing project'.
+
+<img width="1455" height="246" alt="29480" src="https://github.com/user-attachments/assets/bb90ec8b-5d65-49e4-8eb1-8c4d2037976f" />
+
+9. Select GitHub.
+
+<img width="1368" height="570" alt="24866" src="https://github.com/user-attachments/assets/3b5cb969-f462-41b7-93c7-6fb7ae6efaf3" />
+
+10. Your repository should show up on the list. Click it. If not, maybe check the connected accounts, or click 'Configure the Netlify app on GitHub' and follow Netlify's guide.
+
+<img width="1459" height="766" alt="81149" src="https://github.com/user-attachments/assets/9f33873a-0cab-4f56-88ec-7dda68f6ad2c" />
+
+11. Give the project a name (this will be the URL, so choose carefully), and click deploy. After a few minutes of waiting, you now have your own character sheet hosting website up and running 24/7 for free. Enjoy!
 
 
 
