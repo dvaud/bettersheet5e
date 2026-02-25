@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Creator</title>
+</head>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22;
+            --bg: #fdfbf7;
+            --panel: #ffffff;
+            --border: #dcdcdc;
+            --text-main: #333333;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .form-section {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .character-sheet {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .field {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .field label {
+            width: 140px;
+            font-weight: 600;
+        }
+
+        .dynamic-card {
+            border: 1px solid var(--border);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dynamic-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .flex-fill {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            min-width: 250px; 
+        }
+
+        .flex-fill input[type="text"] {
+            flex: 1;
+            width: 100%;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: flex-start;
+            width: 100%;
+            margin-top: -5px;
+        }
+
+        .stat-card {
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            background: var(--panel);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skill-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        .skill-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .spell-card {
+            position: relative;
+            border: 1px solid var(--border);
+            padding: 25px 20px 20px 20px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            background: #fafafa;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: center;
+        }
+
+        .spell-card .full-width {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .spell-card .spell-components-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .spell-card .spell-components-wrapper label {
+            width: auto;
+            margin: 0;
+        }
+
+        .spell-card .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            margin: 0;
+            padding: 2px 8px;
+        }
+
+        input[type="text"], input[type="number"], select, input[type="file"] {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #1a252f;
+        }
+
+        button[style*="color:red;"] {
+            background-color: var(--danger) !important;
+            color: white !important;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+
+        button[style*="color:red;"]:hover {
+            background-color: #c0392b !important;
+        }
+
+        button[onclick*="add"] {
+            background-color: var(--success);
+            margin-bottom: 20px;
+        }
+
+        button[onclick*="add"]:hover {
+            background-color: #27ae60;
+        }
+
+        div[style*="border: 1px solid #ccc;"] {
+            border: 1px solid var(--border) !important;
+            padding: 15px !important;
+            margin-bottom: 15px !important;
+            border-radius: 6px !important;
+            background: #fafafa;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        .hidden { 
+            visibility: hidden;
+        }
+        
+        @media (max-width: 600px) {
+            body { 
+                padding: 10px; 
+            }
+
+            .field label, .dynamic-row label, .flex-fill {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            input[type="text"], input[type="number"], select, input[type="file"] {
+                width: 100%;
+                box-sizing: border-box;
+                min-width: unset;
+            }
+
+            .spell-components-wrapper {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .spell-components-wrapper label {
+                flex-direction: row;
+                width: auto;
+            }
+
+            button[type="submit"], button[onclick*="add"] {
+                width: 100%;
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+
+            .btn-row button {
+                width: auto;
+            }
+
+            .stats-grid-wrapper {
+                grid-template-columns: 1fr !important;
+            }
+
+            #spellcasting {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            #spellcasting input {
+                flex: 0 0 50px;
+            }
+        }
+    </style>
+<body>
+    <h1>Create Your Character</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="loaded_ki_abilities" value='{{ data.ki_abilities | tojson | safe if data.ki_abilities else "[]" }}'>
+        <input type="hidden" name="loaded_meta_abilities" value='{{ data.meta_abilities | tojson | safe if data.meta_abilities else "[]" }}'>
+        <input type="hidden" name="loaded_divinity_abilities" value='{{ data.divinity_abilities | tojson | safe if data.divinity_abilities else "[]" }}'>
+
+      <div style="border: 2px dashed #ccc; padding: 20px; text-align: center; margin-bottom: 20px;">
+        <h3>Load Existing Character</h3>
+        <input type="file" name="character_file" accept=".html">
+        <button type="submit">Upload & Edit</button>
+      </div><hr>
+      
+      <div class="character-sheet">
+        <section>
+            <h2>General information</h2>
+            <div class="field">
+                <label for="name">Character Name:</label>
+                <input type="text" id="name" name="name" value="{{ data.name }}">
+            </div>
+            <div class="field">
+                <label for="class">Class:</label>
+                <input type="text" placeholder="Barbarian" id="class" name="class", value="{{ data.class }}">
+            </div>
+            <div class="field">
+                <label for="level">Level:</label>
+                <input type="number" value="{{ data.level | default(1) }}" id="level" name="level">
+            </div>
+            <div class="field">
+                <label for="race">Race:</label>
+                <input type="text" placeholder="Aasimar" id="race" name="race", value="{{ data.race }}">
+            </div>
+            <div class="field">
+                <label for="char_image">Character Art:</label>
+                <input type="file" id="char_image" name="char_image" accept="image/*">
+
+                {% if data.image %}
+                    <img id="image-preview" src="{{ data.image }}" alt="Character Portrait" style="max-width: 200px; display: block;">
+                    <input type="hidden" name="image_data" id="image-data" value="{{ data.image }}">
+                {% else %}
+                    <img id="image-preview" src="" alt="Character Portrait" style="max-width: 200px; display: none;">
+                    <input type="hidden" name="image_data" id="image-data" value="">
+                {% endif %}
+            </div>
+            <h2>Vitals</h2>
+            <div class="field">
+                <label for="hp">Max HP:</label>
+                <input type="number" value="{{ data.vitals.hp | default(1) }}" id="hp" name="hp">
+            </div>
+            <div class="field">
+                <label for="ac">Armor Class:</label>
+                <input type="number" value="{{ data.vitals.ac | default(10) }}" id="ac" name="ac">
+            </div>
+            <div class="field">
+                <label for="speed">Speed:</label>
+                <input type="number" value="{{ data.vitals.speed | default(30) }}" id="speed" name="speed">
+            </div>
+            <div class="field">
+                <label for="initiative">Initiative:</label>
+                <input type="number" value="{{ data.initiative | default(0) }}" id="initiative" name="initiative">
+            </div>
+        </section>
+
+        <section>
+            <h2>Spellslots</h2>
+            <div class="field">
+                <label id="spellcasting">Cantrips:<input type="number" name="s-0" value="{{ data.spell_slots.get('0', '') }}"> 1:<input type="number" name="s-1" value="{{ data.spell_slots.get('1', '') }}">2:<input type="number" name="s-2" value="{{ data.spell_slots.get('2', '') }}"> 3:<input type="number" name="s-3" value="{{ data.spell_slots.get('3', '') }}"> 4:<input type="number" name="s-4" value="{{ data.spell_slots.get('4', '') }}"> 5:<input type="number" name="s-5" value="{{ data.spell_slots.get('5', '') }}"> 6:<input type="number" name="s-6" value="{{ data.spell_slots.get('6', '') }}"> 7:<input type="number" name="s-7" value="{{ data.spell_slots.get('7', '') }}"> 8:<input type="number" name="s-8" value="{{ data.spell_slots.get('8', '') }}"> 9:<input type="number" name="s-9" value="{{ data.spell_slots.get('9', '') }}"></label>
+            </div>
+        </section>
+        <section>
+          <div>
+            <h2>Class resources</h2>
+                <div class="field">
+                    <label id="ki">Ki Points<input type="number" name="ki" value="{{ data.ki | default(0)}}"></label>
+                </div>
+                <div class="field">
+                    <label id="sorcery">Sorcery Points:<input type="number" name="sorcery" value="{{ data.sorcery | default(0) }}"></label>
+                </div>
+                <div class="field">
+                    <label id="divinity">Channel Divinity:<input type="number" name="divinity" value="{{ data.divinity | default(0) }}"></label>
+                </div>
+         </div>
+        </section>
+    </div>
+
+
+    <h2>Stats & Skills</h2>
+    <div class="stats-grid-wrapper" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        
+        {% for code, details in stats.items() %}
+        <div class="stat-card">
+            
+            <div class="stat-header">
+                <label style="font-weight: bold; font-size: 1.2rem;">{{ details.title }} Score:</label>
+                <input type="number" name="stat_{{ code }}" value="{{ data.stats[code].score | default(10) }}" style="width: 50px; font-size: 1.1rem;">
+            </div>
+            
+            <hr style="margin: 10px 0; width: 100%;">
+
+            {% for skill in details.skills %}
+                <div class="skill-row">
+                    <span>{{ skill }}:</span>
+                    <div class="skill-options">
+                        {% set skill_level = namespace(level='none') %}
+                        {% for loaded_skill in data.stats[code].skills %}
+                            {% if loaded_skill.n == skill %}
+                                {% if loaded_skill.e %}
+                                    {% set skill_level.level = 'expertise' %}
+                                {% elif loaded_skill.p %}
+                                    {% set skill_level.level = 'proficiency' %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <label title="None">None<input type="radio" name="{{ code }}_skill_{{ skill }}" value="none" {% if skill_level.level == 'none' %}checked{% endif %}></label>
+                        <label title="Proficiency">Proficient<input type="radio" name="{{ code }}_skill_{{ skill }}" value="proficiency" {% if skill_level.level == 'proficiency' %}checked{% endif %}></label>
+                        <label title="Expertise">Expert<input type="radio" name="{{ code }}_skill_{{ skill }}" value="expertise" {% if skill_level.level == 'expertise' %}checked{% endif %}></label>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+    </div>
+      
+    <h2>Attacks & Features</h2>
+
+
+    <div id="features-container">
+        {% for feature in data.features %}
+        {% if feature.tag != 'ki' and feature.tag != 'meta' and feature.tag != 'divinity' %}
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                <label>Name: <input type="text" name="feature_name[]" value="{{ feature.name }}"></label>
+                <label>Tag: 
+                    <select name="feature_tag[]">
+                        <option value="Weapon" {% if feature.tag == 'Weapon' %}selected{% endif %}>Weapon</option>
+                        <option value="Feature" {% if feature.tag == 'Feature' %}selected{% endif %}>Feature</option>
+                    </select>
+                </label>
+                <label>Description: <input type="text" name="feature_desc[]" style="width: 300px;" value="{{ feature.desc }}"></label>
+            
+                <button type="button" onclick="this.parentElement.remove()" style="color:red;">X</button>
+            </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <button type="button" onclick="addFeatureRow()">+ Add Feature/Weapon</button>
+    <template id="feature-template">
+        <div class="dynamic-card">
+            <div class="dynamic-row">
+                <label>Name: <input type="text" name="feature_name[]"></label>
+                <label>Tag: 
+                    <select name="feature_tag[]">
+                        <option value="Weapon">Weapon</option>
+                        <option value="Feature">Feature</option>
+                    </select>
+                </label>
+                <label class="flex-fill">Description: <input type="text" name="feature_desc[]"></label>
+            </div>
+            <div class="btn-row">
+                <button type="button" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">X</button>
+            </div>
+        </div>
+    </template>
+
+    <h2>Inventory</h2>
+
+
+    <div id="inventory-container">
+        {% for item in data.inventory %}
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                <label>Name: <input type="text" name="item_name[]" value="{{ item.name }}"></label>
+                <label>Tag: 
+                <select name="item_type[]">
+                    <option value="Armor" {% if item.type == 'Armor' %}selected{% endif %}>Armor</option>
+                    <option value="Gear" {% if item.type == 'Gear' %}selected{% endif %}>Gear</option>
+                    <option value="Magic" {% if item.type == 'Magic' %}selected{% endif %}>Magic</option>
+                    <option value="Potion" {% if item.type == 'Potion' %}selected{% endif %}>Potion</option>
+                </select>
+                </label>
+                <label>Description: <input type="text" name="item_desc[]" style="width: 300px;" value="{{ item.desc }}"></label>
+            
+                <button type="button" onclick="this.parentElement.remove()" style="color:red;">X</button>
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+    <button type="button" onclick="addInventoryRow()">+ Add Item</button>
+    <template id="inventory-template">
+        <div class="dynamic-card">
+            <div class="dynamic-row">
+                <label>Name: <input type="text" name="item_name[]"></label>
+                <label>Tag: 
+                <select name="item_type[]">
+                    <option value="Armor">Armor</option>                
+                    <option value="Gear">Gear</option>
+                    <option value="Magic">Magic</option>
+                    <option value="Potion">Potion</option>
+                </select>
+                </label>      
+                <label class="flex-fill">Description: <input type="text" name="item_desc[]"></label>
+            </div>
+            <div class="btn-row">
+                <button type="button" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">X</button>
+            </div>
+        </div>
+    </template>
+
+    <h2>Notes</h2>
+
+
+    <div id="note-container">
+        {% for note in data.notes %}
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                <label>Title: <input type="text" placeholder="Languages" name="note_title[]" value="{{ note.title }}"></label>
+                <label>Note: <input type="text" placeholder="Common, ..." name="note_text[]" value="{{ note.text }}"></label>
+                <button type="button" onclick="this.parentElement.remove()" style="color:red;">X</button>
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+    <button type="button" onclick="addNoteRow()">+ Add Note</button>
+    <template id="note-template">
+        <div class="dynamic-card">
+            <div class="dynamic-row">
+                <label>Title: <input type="text" placeholder="Languages" name="note_title[]"></label>
+                <label class="flex-fill">Note: <input type="text" placeholder="Common, ..." name="note_text[]"></label>
+            </div>
+            <div class="btn-row">
+                <button type="button" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">X</button>
+            </div>
+        </div>
+    </template>
+
+
+    <h2>Spells</h2>
+
+
+    <div id="spell-container">
+        {% for spell in data.spells %}
+            <div class="spell-card">
+                <label>Name: <input type="text" name="spell_name[]" value="{{ spell.name }}"></label>
+                <label>Level: <input type="number" name="spell_level[]" placeholder="0" value="{{ spell.level }}"></label>
+                <label>School: <input type="text" name="spell_school[]" placeholder="Abjuration" value="{{ spell.school }}"></label>
+                
+                <label>Cast Time: <input type="text" name="spell_ct[]" list="spell-ct" value="{{ spell.time }}"></label>
+                <label>Range: <input type="text" name="spell_r[]" list="spell-r" value="{{ spell.range }}"></label>
+                <label>Duration: <input type="text" name="spell_d[]" list="spell-d" value="{{ spell.dur }}"></label>
+                
+                <div class="full-width spell-components-wrapper">
+                    <label>Components:</label>    
+                    <label><input type="checkbox" class="comp-v" onchange="updateComponents(this)" {% if 'V' in spell.comp %}checked{% endif %}> V</label>
+                    <label><input type="checkbox" class="comp-s" onchange="updateComponents(this)" {% if 'S' in spell.comp %}checked{% endif %}> S</label>
+                    <label><input type="checkbox" class="comp-m" onchange="updateComponents(this)" {% if 'M' in spell.comp %}checked{% endif %}> M</label>
+                    {% set m_text = "" %}
+                    {% if '(' in spell.comp %}
+                        {% set m_text = spell.comp.split('(')[1].split(')')[0] %}
+                    {% endif %}                             
+                    <input type="text" class="comp-m-text" oninput="updateComponents(this)" value="{{ m_text }}" {% if 'M' not in spell.comp %}disabled{% endif %} style="width: 150px;" placeholder="Material details">
+                    <input type="hidden" name="spell_c[]" class="comp-final" value="{{ spell.comp }}">
+                </div>
+                
+                <div class="full-width">
+                    <label style="width: 100%;">Description: <input type="text" name="spell_desc[]" value="{{ spell.desc }}" style="flex: 1;"></label>
+                </div>
+                
+                <button type="button" class="delete-btn" onclick="this.parentElement.remove()" style="color:red;">X</button>
+            </div>
+        {% endfor %}
+    </div>
+
+
+        <button type="button" onclick="addSpellRow()">+ Add Spell</button>
+        <label>Spellcasting Ability: <input type="text" id="spellcast_ab" name="spellcast_ab" placeholder="WIS" value="{{ data.spellcast_ab }}"></label>            
+        <template id="spell-template">
+            <div class="dynamic-card">
+                <div class="dynamic-row">
+                    <label>Name: <input type="text" name="spell_name[]"></label>
+                    <label>Level: <input type="number" name="spell_level[]" placeholder="0"></label>
+                    <label>School: <input type="text" name="spell_school[]" placeholder="Abjuration"></label>
+                </div>
+                
+                <div class="dynamic-row">
+                    <label>Cast Time: <input type="text" name="spell_ct[]" list="spell-ct"></label>
+                    <label>Range: <input type="text" name="spell_r[]" list="spell-r"></label>
+                    <label>Duration: <input type="text" name="spell_d[]" list="spell-d"></label>
+                </div>
+                
+                <div class="dynamic-row">
+                    <div class="spell-components-wrapper" style="display:flex; gap:10px; align-items:center;">
+                        <label>Components:</label>    
+                        <label><input type="checkbox" class="comp-v" onchange="updateComponents(this)"> V</label>
+                        <label><input type="checkbox" class="comp-s" onchange="updateComponents(this)"> S</label>
+                        <label><input type="checkbox" class="comp-m" onchange="updateComponents(this)"> M</label>
+                        <input type="text" class="comp-m-text" oninput="updateComponents(this)" disabled style="width: 120px;">
+                        <input type="hidden" name="spell_c[]" class="comp-final">
+                    </div>
+                    <label class="flex-fill">Description: <input type="text" name="spell_desc[]"></label>
+                </div>
+                
+                <div class="btn-row">
+                     <button type="button" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">X</button>
+                </div>
+            </div>
+        </template>
+    <div></div>
+    <hr><button type="submit">Next / Generate</button>
+    </form>
+
+    <datalist id="spell-ct">
+        <option value="1 Action">
+        <option value="1 Bonus Action">
+        <option value="1 Reaction">
+    </datalist>
+    <datalist id="spell-r">
+        <option value="Self">
+        <option value="Touch">
+        <option value="Sight">  
+        <option value="Unlimited">                                               
+    </datalist>
+    <datalist id="spell-d">
+        <option value="Instant">
+    </datalist>
+    <script>
+
+        document.getElementById('char_image').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64String = e.target.result;
+                const preview = document.getElementById('image-preview');
+                preview.src = base64String;
+                preview.style.display = 'block';
+                document.getElementById('image-data').value = base64String;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+        function addFeatureRow() {
+            const container = document.getElementById("features-container");
+            const template = document.getElementById("feature-template");
+            const clone = template.content.cloneNode(true);
+            container.appendChild(clone);
+        }
+        function addInventoryRow() {
+            const container = document.getElementById("inventory-container");
+            const template = document.getElementById("inventory-template");
+            const clone = template.content.cloneNode(true);
+            container.appendChild(clone);
+        }
+        function addNoteRow() {
+            const container = document.getElementById("note-container");
+            const template = document.getElementById("note-template");
+            const clone = template.content.cloneNode(true);
+            container.appendChild(clone);
+        }
+        function addSpellRow() {
+            const container = document.getElementById("spell-container");
+            const template = document.getElementById("spell-template");
+            const clone = template.content.cloneNode(true);
+            container.appendChild(clone);
+        }
+        window.onload = function() {
+                {% if not data.features %} addFeatureRow(); {% endif %}
+                {% if not data.inventory %} addInventoryRow(); {% endif %}
+                {% if not data.notes %} addNoteRow(); {% endif %}
+                {% if not data.spells %} addSpellRow(); {% endif %}
+            };
+
+
+        function updateComponents(element) {
+            const wrapper = element.closest('.spell-components-wrapper');
+            const v = wrapper.querySelector('.comp-v').checked;
+            const s = wrapper.querySelector('.comp-s').checked;
+            const mCheckbox = wrapper.querySelector('.comp-m');
+            const mText = wrapper.querySelector('.comp-m-text');
+            const finalInput = wrapper.querySelector('.comp-final');
+            if (mCheckbox.checked) {
+                mText.disabled = false;
+            } else {
+                mText.disabled = true;
+                mText.value = "";
+            }
+            let parts = [];
+            if (v) parts.push("V");
+            if (s) parts.push("S");
+            if (mCheckbox.checked) {
+                let mString = "M";
+                if (mText.value.trim() !== "") {
+                    mString += ` (${mText.value.trim()})`;
+                }
+                parts.push(mString);
+            }
+            finalInput.value = parts.join(", ");
+    }
+</script> 
+</body>
+</html>    

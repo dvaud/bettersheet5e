@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.name }}'s Character Sheet</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22;
+            --bg: #fdfbf7;
+            --panel: #ffffff;
+            --border: #dcdcdc;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --bg-secondary: #eeeeee;
+            --bg-tertiary: #f0f4f8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding-bottom: 50px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --primary: #aab7c4;
+            --bg: #121212;
+            --panel: #1e1e1e;
+            --border: #333333;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #252525;
+        }
+
+        /* Header */
+        .sheet-header { text-align: center; border-bottom: 3px double var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
+        .header-stats { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .stat-pill { font-size: 0.9rem; background: #eee; padding: 5px 15px; border-radius: 15px; display: inline-block; }
+
+        /* Vitals (HP, AC) */
+        .vitals { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .vital-box { border: 2px solid var(--primary); width: 70px; padding: 10px 5px; text-align: center; background: var(--panel); }
+        .vital-box h2 { margin: 0; font-size: 1.6rem; color: var(--primary); }
+        .vital-box span { font-size: 0.9rem; font-weight: bold; color: #666; }
+        .sub-label { font-size: 0.7rem; color: #888; display: block; margin-top: 2px; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
+        .stat-btn { background: var(--panel); border: 1px solid var(--primary); border-radius: 8px; padding: 10px; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .stat-btn:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+        .mod { font-size: 1.4rem; font-weight: bold; display: block; }
+        .label { font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; }
+
+        /* Skill Table */
+        .skill-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.95rem; }
+        .skill-row { border-bottom: 1px solid #eee; }
+        .skill-cell { padding: 8px 5px; }
+        .skill-marker { width: 20px; text-align: center; color: #ccc; font-size: 1.2rem; }
+        .is-proficient { color: var(--accent); } 
+        .is-expert { color: var(--accent); text-shadow: 0 0 1px var(--accent); }
+        .skill-name { text-align: left; font-weight: 500; }
+        .skill-val { text-align: right; font-weight: bold; color: var(--primary); }
+        .save-row { background-color: #f0f4f8; font-weight: bold; }
+        .save-row .skill-name { color: var(--primary); }
+
+        /* Inventory & Lists */
+        h3 { border-bottom: 1px solid var(--border); color: var(--primary); margin-top: 30px; padding-bottom: 5px; }
+        details { background: var(--panel); border: 1px solid var(--border); margin-bottom: 8px; border-radius: 4px; }
+        summary { padding: 12px; cursor: pointer; font-weight: 600; display: flex; align-items: center; list-style: none; }
+        summary > span:first-child { margin-right: auto; }
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: "+"; font-size: 1.2rem; color: var(--accent); margin-left: 10px; }
+        details[open] summary::after { content: "−"; }
+        .content { padding: 15px; border-top: 1px solid #eee; font-size: 0.95rem; line-height: 1.5; }
+        
+        /* Badges */
+        .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; background: #e0e0e0; color: #555; text-transform: uppercase; font-weight: bold; margin: 0 10px; }
+        .type-potion { background: #ffeaa7; color: #d35400; }
+        .type-weapon { background: #ff7675; color: #fff; }
+        .type-armor { background: #74b9ff; color: #fff; }
+        .type-gear { background: #bdc3c7; color: #2c3e50; }
+        .type-feature { background: #16a085; color: #fff; }
+        .type-magic { background: #f1c40f; color: #fff; }
+        .type-ki { background: #8e44ad; color: #fff; }
+        .type-meta { background: #d5f4ef; color: #2c3e50; }
+        .type-divinity { background: #fbff17; color: #2c3e50; }
+
+
+        /* Class Resource Banner */
+        .resource-banner {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--bg-secondary);
+            color: var(--accent); /* Uses your orange accent, or you can hardcode purple */
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .resource-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        .resource-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--primary);
+        }
+
+        .resource-desc {
+            font-size: 0.7rem;
+            font-weight: 800;
+            font-style: italic;
+            line-height: 1;
+            color: var(--primary);
+        }
+
+
+        /* Notes */
+        .notes-container { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
+        .note-block { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
+        .note-block:last-child { border: none; margin: 0; padding: 0; }
+        .note-title { font-size: 0.9rem; text-transform: uppercase; color: var(--accent); font-weight: bold; display: block; margin-bottom: 5px; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 8px; max-width: 340px; width: 90%; position: relative; max-height: 80vh; overflow-y: auto; }
+        .close-btn { position: absolute; top: 10px; right: 10px; background: #eee; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; }
+        .modal-title { color: var(--accent); border-bottom: 1px solid #eee; margin-top: 0; padding-bottom: 10px; }
+    
+        /* Spell Styles */
+        .type-spell { background: #9b59b6; color: white; } 
+        .type-cantrip { background: #95a5a6; color: white; }
+
+        .spell-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #555;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent);
+        }
+        .meta-item { display: flex; flex-direction: column; }
+        .meta-label { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #999; }
+        .meta-val { font-weight: 600; color: var(--primary); }
+
+        /* Spell Slots */
+        .slots-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .slot-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f4f8;
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid #dce4ec;
+        }
+        .slot-label { font-weight: bold; color: #555; font-size: 0.9rem; }
+        .slot-val { font-weight: bold; color: var(--accent); font-size: 1.1rem; }
+        
+        /* ================= SPELLS ================= */
+        .spell-guide-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+            justify-content: space-around;
+            background: #f0f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dce4ec;
+        }
+        .guide-box {
+            flex: 1;
+            min-width: 240px;
+            text-align: center;
+        }
+        .guide-title {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .formula-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .math-sign {
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            font-weight: 300;
+        }
+        /* Shapes */
+        .guide-shape {
+            width: 45px; height: 45px;
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; color: var(--primary);
+            font-size: 1rem;
+            background: white;
+            border: 2px solid #bdc3c7;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .shape-static {
+            font-size: 1.8rem; border: none; background: none; box-shadow: none; width: auto;
+        }
+        .shape-d20 {
+            border-radius: 4px; background: #eef2f7; border-color: var(--primary);
+        }
+        .shape-circle {
+            border-radius: 50%;
+        }
+        .shape-diamond {
+            transform: rotate(45deg);
+            margin: 5px;
+        }
+        .shape-diamond span {
+            transform: rotate(-45deg);
+            display: block;
+            font-size: 1rem;
+            line-height: 1;
+        }
+        .guide-label {
+            font-size: 0.75rem; color: #666; margin-top: 5px; line-height: 1.3;
+        }
+        .guide-label strong { color: var(--accent); }
+
+
+        /* ================= DARK MODE ================= */
+        body.dark-mode .stat-pill, 
+        body.dark-mode .close-btn,
+        body.dark-mode .shape-d20 { background: var(--bg-secondary); color: var(--text-main); }
+
+        body.dark-mode .vital-box span { color: var(--text-muted); }
+        body.dark-mode .sub-label, 
+        body.dark-mode .math-sign,
+        body.dark-mode .guide-label { color: var(--text-muted); }
+        body.dark-mode .modal-content { background-color: var(--panel); color: var(--text-main); }  /* <--- ADD THIS LINE */
+
+        body.dark-mode .save-row { background-color: #2c3e50; color: #fff; }
+        body.dark-mode .save-row .skill-name { color: #fff; }
+
+        body.dark-mode .spell-meta, 
+        body.dark-mode .slot-group,
+        body.dark-mode .spell-guide-container { background: var(--bg-tertiary); border-color: var(--border); }
+
+        body.dark-mode .guide-shape { background: var(--panel); color: var(--text-main); border-color: #444; }
+        body.dark-mode .skill-row { border-bottom-color: #333; }
+        body.dark-mode .note-block { border-bottom-color: #333; }
+        body.dark-mode details { border-color: #333; }
+
+        /* Toggle Button Style */
+        .theme-switch {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--panel);
+            border: 1px solid var(--primary);
+            color: var(--text-main);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            z-index: 2000;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body.dark-mode .slot-label,
+        body.dark-mode .spell-meta { color: var(--text-main); }
+        body.dark-mode .shape-static { background: transparent; border: none; box-shadow: none; }
+
+        /* ================= DESKTOP LAYOUT  ================= */
+        @media (min-width: 900px) {
+            body { max-width: 1200px; padding: 30px; }
+
+            .layout-container {
+                display: grid;
+                grid-template-columns: 340px 1fr; 
+                gap: 40px;
+                align-items: start; 
+            }
+        
+            .sidebar-pane {
+                position: sticky; 
+                top: 20px;
+
+                background: var(--panel);
+                border: 2px solid var(--primary);
+                border-radius: 16px;
+                padding: 25px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+
+                max-height: calc(100vh - 40px);
+                overflow-y: auto; 
+                z-index: 10;
+            }
+        
+            .sheet-header { border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 20px; }
+            .vitals { margin-bottom: 25px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+
+            body.dark-mode .sidebar-pane { border-color: #444; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    }
+    </style>
+</head>
+
+<body>
+<button class="theme-switch" onclick="toggleTheme()" id="theme-btn">🌙</button>
+<div class="layout-container">
+    <div class="sidebar-pane">
+        <div class="sheet-header">
+            <h1 id="c-name">{{ data.name }}</h1>
+            <span id="c-class" style="margin: 0 0 10px 0; font-weight: 500;">{{ data.class }}</span><span> | </span>
+            <span id="c-level" style="margin: 0 0 10px 0; font-weight: 500;">Lvl {{ data.level }}</span><span> | </span>
+            <span id="c-race" style="margin: 0 0 10px 0; font-weight: 500;">{{ data.race }}</span>
+            <div class="header-stats">
+                <div class="stat-pill">Initiative: <strong id="c-init">{{ data.initiative }}</strong></div>
+                <div class="stat-pill">Proficiency: <strong id="c-prof">+{{ data.proficiency }}</strong></div>
+                <div class="stat-pill">Passive Perception: <strong id="c-pp">{{ data.pperception }}</strong></div>
+            </div>
+        </div>
+
+        <div class="vitals">
+            <div class="vital-box" style="border-radius: 10px 10px 50% 50%;">
+                <h2 id="c-hp">{{data.vitals.hp}}</h2><span>HP</span><span class="sub-label"></span>
+            </div>
+            <div class="vital-box" style="border-radius: 0 0 50% 50%;">
+                <h2 id="c-ac">{{data.vitals.ac}}</h2><span>AC</span><span class="sub-label"></span>
+            </div>
+            <div class="vital-box" style="border-radius: 8px;"> 
+                <h2 id="c-speed">{{data.vitals.speed}}ft</h2><span>Speed</span><span class="sub-label"></span>
+            </div>
+        </div>
+
+        <div class="stats-grid" id="stats-container">
+            {% for key, stat in data.stats.items() %}
+                <div class="stat-btn" onclick="openStatModal('{{ key }}')">
+                    <span class="label">{{stat.label}}</span>
+                    {% if stat.mod > 0 %}
+                        <span class="mod">+{{stat.mod}}</span>
+                    {% elif stat.mod < 0 %}
+                        <span class="mod">{{stat.mod}}</span>
+                    {% elif stat.mod == 0 %}
+                        <span class="mod">{{stat.mod}}</span>
+                    {% endif %}
+                    <span style="display:none" id="score-{{ key }}">{{ stat.score }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        {% if data.image %}
+            <div style="margin-top: 20px; text-align: center;">
+                <img src="{{ data.image }}" alt="Character Art" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; border: 2px solid var(--primary);">
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="content-pane">
+        <h3>Attacks & Features</h3>
+        <div id="features-container">
+            {% for feature in data.features %}
+                {% if not feature.customType and feature.tag|lower != 'ki' and feature.tag|lower != 'meta' and feature.tag|lower != 'divinity' %}
+                <details>
+                    <summary>
+                        <span>{{feature.name}}</span>
+                        {% if feature.tag %}
+                            <span class="badge type-{{ feature.tag | lower }}">{{feature.tag}}</span>
+                        {% endif %}
+                    </summary> 
+                    <div class="content">
+                        <p>{{ feature.desc | safe }}</p>
+                    </div>
+                </details>
+                {% endif %}
+            {% endfor %}
+
+            {% for feature in data.features %}
+                {% if feature.customType == 'ki' %}
+                <div class="resource-banner">
+                    <span class="resource-name">{{ feature.name | upper }} (MAX)</span>
+                    <span class="resource-value">{{ feature.max }}</span>
+                    <span class="resource-desc">{{ feature.desc }}</span>
+                </div>
+                {% endif %}
+            {% endfor %}
+            {% for feature in data.features %}
+                {% if not feature.customType and feature.tag|lower == 'ki' %}
+                    <details>
+                        <summary>
+                            <span>{{feature.name}}</span>
+                            {% if feature.tag %}
+                                <span class="badge type-{{ feature.tag | lower }}">{{feature.tag}}</span>
+                            {% endif %}
+                        </summary> 
+                        <div class="content">
+                            <p>{{ feature.desc | safe }}</p>
+                        </div>
+                    </details>
+                {% endif %}
+            {% endfor %}
+
+            {% for feature in data.features %}
+                {% if feature.customType == 'meta' %}
+                <div class="resource-banner">
+                    <span class="resource-name">{{ feature.name | upper }} (MAX)</span>
+                    <span class="resource-value">{{ feature.max }}</span>
+                    <span class="resource-desc">{{ feature.desc }}</span>
+                </div>
+                {% endif %}
+            {% endfor %}
+            {% for feature in data.features %}
+                {% if not feature.customType and feature.tag|lower == 'meta' %}
+                    <details>
+                        <summary>
+                            <span>{{feature.name}}</span>
+                            {% if feature.tag %}
+                                <span class="badge type-{{ feature.tag | lower }}">{{feature.tag}}</span>
+                            {% endif %}
+                        </summary> 
+                        <div class="content">
+                            <p>{{ feature.desc | safe }}</p>
+                        </div>
+                    </details>
+                {% endif %}
+            {% endfor %}
+
+            {% for feature in data.features %}
+                {% if feature.customType == 'divinity' %}
+                <div class="resource-banner">
+                    <span class="resource-name">{{ feature.name | upper }} (MAX)</span>
+                    <span class="resource-value">{{ feature.max }}</span>
+                    <span class="resource-desc">{{ feature.desc }}</span>
+                </div>
+                {% endif %}
+            {% endfor %}
+            {% for feature in data.features %}
+                {% if not feature.customType and feature.tag|lower == 'divinity' %}
+                    <details>
+                        <summary>
+                            <span>{{feature.name}}</span>
+                            {% if feature.tag %}
+                                <span class="badge type-{{ feature.tag | lower }}">{{feature.tag}}</span>
+                            {% endif %}
+                        </summary> 
+                        <div class="content">
+                            <p>{{ feature.desc | safe }}</p>
+                        </div>
+                    </details>
+                {% endif %}
+            {% endfor %}
+
+
+        </div>
+
+        {% if data.spell_slots %}
+            <div id="spell-section">
+                <h3>Spellcasting</h3>
+                <div class="spell-guide-container">
+                    <div class="guide-box">
+                        <span class="guide-title">Spell Save DC</span>
+                        <div class="formula-row">
+                            <div class="guide-shape shape-static">8</div>
+                            <span class="math-sign">+</span>
+                            <div class="guide-shape shape-diamond"><span>{{ data.spellcast_ab }}</span></div>
+                            <span class="math-sign">+</span>
+                            <div class="guide-shape shape-circle"><span>{{ data.proficiency }}</span></div>
+                        </div>
+                        <p class="guide-label">Your enemy has to reach this target number when <u>defending against your spell</u>.<br>(<strong>8</strong> + Ability + Proficiency)</p>
+                    </div>
+
+                    <div class="guide-box" style="border-left: 2px dashed #dce4ec; padding-left: 15px;">
+                        <span class="guide-title">Spell Attack (To-Hit)</span>
+                        <div class="formula-row">
+                            <div class="guide-shape shape-d20">D20</div>
+                            <span class="math-sign">+</span>
+                            <div class="guide-shape shape-diamond"><span>{{ data.spellcast_ab }}</span></div>
+                            <span class="math-sign">+</span>
+                            <div class="guide-shape shape-circle"><span>{{ data.proficiency }}</span></div>
+                        </div>
+                        <p class="guide-label">You need to reach this target number when you want <u>to hit with your spell</u>.<br>(<strong>D20</strong> + Ability + Proficiency)</p>
+                    </div>
+                </div>
+                
+                <div class="notes-container" id="slots-container" style="margin-bottom: 15px; text-align:center;">
+                    
+                    <h4 style="color: var(--accent); margin-bottom: 5px; text-transform: uppercase;">Daily Spell Slots</h4>
+                    <p style="font-size: 0.8rem; color: #888; font-style: italic;">Ennyi Spell használható fel szintenként minden nap.</p>
+                    
+                    <div class="slots-wrapper">
+                        {% if data.spell_slots["1"] %}
+                        <div class="slot-group">
+                            <span class="slot-label">Lvl 1:</span>
+                            <span class="slot-val">{{ data.spell_slots["1"] }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.spell_slots["2"] %}
+                        <div class="slot-group">
+                            <span class="slot-label">Lvl 2:</span>
+                            <span class="slot-val">{{ data.spell_slots["2"] }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.spell_slots["3"] %}
+                        <div class="slot-group">
+                            <span class="slot-label">Lvl 3:</span>
+                            <span class="slot-val">{{ data.spell_slots["3"] }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.spell_slots["4"] %}
+                        <div class="slot-group">
+                            <span class="slot-label">Lvl 4:</span>
+                            <span class="slot-val">{{ data.spell_slots["4"] }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.spell_slots["5"] %}
+                        <div class="slot-group">
+                            <span class="slot-label">Lvl 5:</span>
+                            <span class="slot-val">{{ data.spell_slots["5"] }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.spell_slots["6"] %}
+                        <div class="slot-group">
+                            <span class="slot-label">Lvl 6:</span>
+                            <span class="slot-val">{{ data.spell_slots["6"] }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.spell_slots["7"] %}
+                        <div class="slot-group">
+                            <span class="slot-label">Lvl 7:</span>
+                            <span class="slot-val">{{ data.spell_slots["7"] }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.spell_slots["8"] %}
+                        <div class="slot-group">
+                            <span class="slot-label">Lvl 8:</span>
+                            <span class="slot-val">{{ data.spell_slots["8"] }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.spell_slots["9"] %}
+                        <div class="slot-group">
+                            <span class="slot-label">Lvl 9:</span>
+                            <span class="slot-val">{{ data.spell_slots["9"] }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="spells-container">
+
+                    {% for spell in data.spells %}
+                        <details>
+                            <summary>
+                                <span>{{ spell.name }}</span>
+                                {% if spell.level == 0 %}
+                                    <span class="badge type-cantrip">CANTRIP</span>   
+                                {% else %}
+                                    <span class="badge type-spell">LVL {{ spell.level }}</span>
+                                {% endif %}
+                            </summary>
+
+                            <div class="content">
+                                <div class="spell-meta">
+                                    <div class="meta-item"><span class="meta-label">Time</span><span class="meta-val">{{ spell.time }}</span></div>
+                                    <div class="meta-item"><span class="meta-label">Range</span><span class="meta-val">{{ spell.range }}</span></div>
+                                    <div class="meta-item"><span class="meta-label">Component</span><span class="meta-val">{{ spell.comp }}</span></div>
+                                    <div class="meta-item"><span class="meta-label">Duration</span><span class="meta-val">{{ spell.dur }}</span></div>
+                                </div>
+                                <p><i>School of {{ spell.school }}</i></p>
+                                <p>{{ spell.desc | safe }}</p>
+                            </div>
+                        </details>
+                    {% endfor %}
+
+                </div>
+            </div>
+        {% endif %}
+        <h3>Inventory</h3>
+        <div id="inventory-container">
+            {% for item in data.inventory %}
+            <details>
+                <summary>
+                    <span>{{ item.name }}</span>
+                    <span class="badge type-{{ item.type | lower }}">{{ item.type }}</span>
+                </summary>
+                
+                <div class="content">
+                    <span>{{ item.desc }}</span>
+                </div>
+            </details>
+            {% endfor %}
+        </div>
+
+        <h3>Other Notes</h3>
+        <div class="notes-container" id="notes-container">
+            {% for note in data.notes %}
+                <div class="note-block">
+                    <span class="note-title">{{ note.title | safe }}</span><p class="note-text">{{ note.text | safe }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div id="modal-overlay" class="modal-overlay" onclick="closeModal()">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="close-btn" onclick="closeModal()">X</button>
+                <h3 id="m-title" class="modal-title"></h3>
+                <div id="m-body"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // =========================================================================
+    // 1. THE BRIDGE
+    // =========================================================================
+    // We take the Python 'data' variable and convert it to a JSON object 
+    // that JavaScript can read. This allows our Modals to see the descriptions.
+    const charData = {{ data | tojson }};
+    // =========================================================================
+    // 2. INTERACTIVITY
+    // =========================================================================
+
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('theme-btn');
+        body.classList.toggle('dark-mode');
+
+        const isDark = body.classList.contains('dark-mode');
+        btn.innerText = isDark ? '☀️' : '🌙'; 
+    }
+
+    function openStatModal(key) {
+        // We read from 'charData' instead of 'characterSheet'
+        if(!charData.stats || !charData.stats[key]) return;
+        const stat = charData.stats[key];
+        
+        let html = `<p>${stat.score} | ${stat.desc}</p>`;
+        
+        // Render the Skills table dynamically
+        if (stat.skills) {
+            html += `<table class="skill-table">`;
+            stat.skills.forEach(skill => {
+                let marker = '○';
+                let profClass = 'skill-marker';
+
+                if (skill.e) { 
+                    marker = '◎'; 
+                    profClass += ' is-expert';
+                } else if (skill.p) {
+                    marker = '●'; 
+                    profClass += ' is-proficient';
+                }
+
+                const rowClass = skill.n === 'Save' ? 'skill-row save-row' : 'skill-row';
+                const displayName = skill.n === 'Save' ? 'Saving Throw' : skill.n;
+                
+                html += `
+                <tr class="${rowClass}">
+                    <td class="${profClass}">${marker}</td>
+                    <td class="skill-cell skill-name">${displayName}</td>
+                    <td class="skill-cell skill-val">${skill.v}</td>
+                </tr>`;
+            });
+            html += `</table>`;
+        }
+
+        document.getElementById('m-title').innerText = stat.title;
+        document.getElementById('m-body').innerHTML = html;
+        document.getElementById('modal-overlay').style.display = 'flex';
+    }
+
+    function closeModal() { 
+        document.getElementById('modal-overlay').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Details</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22;
+            --bg: #fdfbf7;
+            --panel: #ffffff;
+            --border: #dcdcdc;
+            --text-main: #333333;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h1, h2 {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+        }
+
+        .dynamic-card {
+            border: 1px solid var(--border);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dynamic-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .flex-fill {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            min-width: 250px; 
+        }
+
+        .flex-fill input[type="text"] {
+            flex: 1;
+            width: 100%;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: flex-start;
+            width: 100%;
+            margin-top: -5px; /* Pulls the button slightly closer to the inputs */
+        }
+
+        .resource-section {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .row, div[style*="border: 1px solid #ccc;"] {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid var(--border) !important;
+            padding: 15px !important;
+            margin-bottom: 15px !important;
+            border-radius: 6px !important;
+            background: #fafafa;
+        }
+
+        label {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="text"], input[type="number"] {
+            flex-grow: 1;
+            min-width: 150px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            flex-grow: 0;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #1a252f;
+        }
+
+        button.add, button[onclick*="add"] {
+            background-color: var(--success);
+            margin-bottom: 10px;
+        }
+
+        button.add:hover, button[onclick*="add"]:hover {
+            background-color: #27ae60;
+        }
+
+        button.remove, button[style*="color:red;"] {
+            background-color: var(--danger) !important;
+            color: white !important;
+            padding: 5px 10px;
+        }
+
+        button.remove:hover, button[style*="color:red;"]:hover {
+            background-color: #c0392b !important;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+        @media (max-width: 600px) {
+            body { 
+                padding: 10px; 
+            }
+
+            .field label, .dynamic-row label, .flex-fill {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            input[type="text"], input[type="number"], select, input[type="file"] {
+                width: 100%;
+                box-sizing: border-box;
+                min-width: unset;
+            }
+
+            .spell-components-wrapper {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .spell-components-wrapper label {
+                flex-direction: row;
+                width: auto;
+            }
+
+            button[type="submit"], button[onclick*="add"] {
+                width: 100%;
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+
+            .btn-row button {
+                width: auto;
+            }
+
+            .stats-grid-wrapper {
+                grid-template-columns: 1fr !important;
+            }
+
+            #spellcasting {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            #spellcasting input {
+                flex: 0 0 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Class Features Details</h1>
+    <p>We detected special resources. Please add your abilities below.</p>
+    <form action="{{ url_for('finalize_sheet') }}" method="POST">
+        <input type="hidden" name="previous_data" value='{{ encoded_data }}'>
+
+        {% set ns = namespace(ki_max=data.ki|default(0), meta_max=data.sorcery|default(0), div_max=data.divinity|default(0)) %}
+
+        {% for feature in data.features %}
+            {% set val = feature.max if feature.max else feature.value %}
+            {% if feature.customType == 'ki' %}
+                {% set ns.ki_max = val %}
+            {% elif feature.customType == 'meta' %}
+                {% set ns.meta_max = val %}
+            {% elif feature.customType == 'divinity' %}
+                {% set ns.div_max = val %}
+            {% endif %}
+        {% endfor %}
+
+        {# 2. UI Containers #}
+        {% if ns.ki_max|int > 0 %}
+            <div class="resource-section">
+                <h2>Ki Abilities</h2>
+                <h4>(Total Ki Points: {{ ns.ki_max }})</h4>
+                <div id="ki-container">
+                    {% for ability in data.ki_abilities %}
+                        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                            <label>Name: <input type="text" name="ki_name[]" value="{{ ability.name }}"></label>   
+                            <label>Description: <input type="text" name="ki_desc[]" value="{{ ability.desc }}"></label>
+                            <label>Cost: <input type="number" name="ki_cost[]" value="{{ ability.cost | default(1) }}"></label>              
+                            <button type="button" onclick="this.parentElement.remove()" style="color:red;">X</button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="add" onclick="addKiRow()">+ Add Ki Feature</button>
+            </div>
+        {% endif %}
+
+        {% if ns.meta_max|int > 0 %}
+            <div class="resource-section">
+                <h2>Metamagic Options</h2>
+                <h4>(Total Sorcery Points: {{ ns.meta_max }})</h4>
+                <div id="meta-container">
+                    {% for ability in data.meta_abilities %}
+                        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                            <label>Name: <input type="text" name="meta_name[]" value="{{ ability.name }}"></label>   
+                            <label>Description: <input type="text" name="meta_desc[]" value="{{ ability.desc }}"></label>
+                            <label>Cost: <input type="number" name="meta_cost[]" value="{{ ability.cost | default(1) }}"></label>              
+                            <button type="button" onclick="this.parentElement.remove()" style="color:red;">X</button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="add" onclick="addMetaRow()">+ Add Metamagic Feature</button>
+            </div>
+        {% endif %}
+
+        {% if ns.div_max|int > 0 %}
+            <div class="resource-section">
+                <h2>Channel Divinity</h2>
+                <h4>(Total Channel Divinity uses: {{ ns.div_max }})</h4>
+                <div id="divinity-container">
+                    {% for ability in data.divinity_abilities %}
+                        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                            <label>Name: <input type="text" name="divinity_name[]" value="{{ ability.name }}"></label>   
+                            <label>Description: <input type="text" name="divinity_desc[]" value="{{ ability.desc }}"></label>
+                            <button type="button" onclick="this.parentElement.remove()" style="color:red;">X</button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="add" onclick="addDivinityRow()">+ Add Channel Divinity</button>
+            </div>
+        {% endif %}
+
+        <template id="ki-template">
+            <div class="dynamic-card">
+                <div class="dynamic-row">
+                    <label>Name: <input type="text" name="ki_name[]" value=""></label>   
+                    <label>Cost: <input type="number" name="ki_cost[]" value="1"></label>              
+                    <label class="flex-fill">Description: <input type="text" name="ki_desc[]" value=""></label>
+                </div>
+                <div class="btn-row">
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">X</button>
+                </div>
+            </div>
+        </template>
+
+        <template id="meta-template">
+            <div class="dynamic-card">
+                <div class="dynamic-row">
+                    <label>Name: <input type="text" name="meta_name[]" value=""></label>
+                    <label>Cost: <input type="number" name="meta_cost[]" value="1"></label>
+                    <label class="flex-fill">Description: <input type="text" name="meta_desc[]" value=""></label>
+                </div>
+                <div class="btn-row">
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">X</button>
+                </div>
+            </div>
+        </template>
+
+        <template id="divinity-template">
+            <div class="dynamic-card">
+                <div class="dynamic-row">
+                    <label>Name: <input type="text" name="divinity_name[]" value=""></label>
+                    <label class="flex-fill">Description: <input type="text" name="divinity_desc[]" value=""></label>
+                </div>
+                <div class="btn-row">
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">X</button>
+                </div>
+            </div>
+        </template>
+
+    <hr><button type="submit">Generate Sheet</button>
+
+<script>
+    function addKiRow() {
+        const container = document.getElementById("ki-container");
+        const template = document.getElementById("ki-template");
+        container.appendChild(template.content.cloneNode(true));
+    }
+    function addMetaRow() {
+        const container = document.getElementById("meta-container");
+        const template = document.getElementById("meta-template");
+        container.appendChild(template.content.cloneNode(true));
+    }
+    function addDivinityRow() {
+        const container = document.getElementById("divinity-container");
+        const template = document.getElementById("divinity-template");
+        container.appendChild(template.content.cloneNode(true));
+    }
+
+    window.onload = function() {
+        {% if ns.ki_max|int > 0 and not data.ki_abilities %} addKiRow(); {% endif %}
+        {% if ns.meta_max|int > 0 and not data.meta_abilities %} addMetaRow(); {% endif %}
+        {% if ns.div_max|int > 0 and not data.divinity_abilities %} addDivinityRow(); {% endif %}
+    };
+</script>
+</body>
+</html>
