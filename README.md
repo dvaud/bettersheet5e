@@ -29,9 +29,19 @@ This is the easier, more traditional route. After downloading the HTML file you 
 There is more initial setup needed for this option, but it should not take over 15 minutes even if you have never done anything like this before. I will take you through a step by step guide.
 
 1. Create a new folder on your computer. For better organisation all of your downloaded files should go here for now.
-2. Withing the files you will find an `index.html` template. Download it into your folder.
+2. Withing the files you will find an `index.html` template. Download it into your folder and make sure not to change the name from `index.html`!
 3. Using the creator form make your character sheets that you will want to upload. Place them in the same folder as `index.html`.
 
 _Now we will need to point `index.html` to the character sheets._
+
+4. There is an inbuilt tutorial within `index.html`, follow that in accordance with the provided example image. You only need to change the contents withing the <body> section, you can ignore everything else. _If you don't know how to edit HTML files, [follow this guide](https://www.w3schools.com/html/html_editors.asp)._
+
+<img width="651" height="199" alt="14388" src="https://github.com/user-attachments/assets/a519c819-8a3c-4e75-bb4f-dbe8fe14a6eb" />
+
+
+_For the next steps, you will need a GitHub account._
+
+
+
 
   
