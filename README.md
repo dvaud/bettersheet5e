@@ -15,13 +15,13 @@ For more advanced parties this is also useful, as the more integrated and offici
 - Adding custom lore to items, spells, weapons.
 
 # How it works
-After you fill out the form, a HTML template is generated and it downloads. **The HTML file can be opened locally in your browsers, or it could be uploaded online for free(\*1).**
+After you fill out the form, a HTML template is generated and it downloads. **The HTML file can be opened locally in your browsers, or it could be uploaded online for free** (see recommended use).
 It is recommended that you fill out everything in the form to have the full experience, but the flexibility of the generator allows you to input just the bare minimum if you are in a hurry. As a DM, I sometimes create a barebones sheet for NPC-s, to help me remember them later and to have its stats ready in one place if I need it in an instant.
 **It is also possible to load a previously generated character sheet back into the form.** This is important for level ups, losing or receiving items, correcting mistakes without having to restart the creation process.
 ## Recommended creation flow
 When I create full player character sheets using this tool, I usually note the necessary calculations (like character HP, AC, ...) on a piece of paper and start inputing everything. For weapons, features, items, spells, I use the descriptions from online databases like DnD Beyond or wikiDot as reference to personalise descriptions to the player's character or the person's preferences. To style the text it is possible to use [HTML text formatting](https://www.w3schools.com/html/html_formatting.asp). 
 
-## Recommended use (\*1)
+## Recommended use
 As I mentioned before it is perfectly reasonable for everyone to have their character sheets on their own computer that can be opened locally in their browser. However, I like for my party to have a central hub for all of their character sheets that everyone can access online on their computer, tablet or phone at all times. _(Note: Do this only if there are no secret character features are planned that would be spoiled if the party could see each others' sheets. Check with the others first.)_
 ### Option 1: Staying local
 This is the easier, more traditional route. After downloading the HTML file you are able to open it within any browser of your choice. 
@@ -84,4 +84,7 @@ _Now that your files live online, you can decide to keep them on your computer o
 
 
 
-  
+# Technical explanation, roadmap and finishing comments
+In reality I made this because I was about to start learning web development with Flask in uni and I wanted to try it. Than more and more features ballooned the project and I ended up spending almost a month working on it (instead of the one afternoon I originally thought). It was a fun learning experience though! For me, this is a really useful tool that I actually use and think is better than any alternative out there.
+For my personal needs, this is a complete product, however you cannot make a Druid conveniently, using the Class Resources editor for Wild Shape. This is because I do not understand how it works and I didn't want to just hack it in with an LLM. 
+If anyone ever reads this: Hi!
