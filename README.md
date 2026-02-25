@@ -85,6 +85,6 @@ _Now that your files live online, you can decide to keep them on your computer o
 
 
 # Technical explanation, roadmap and finishing comments
-In reality I made this because I was about to start learning web development with Flask in uni and I wanted to try it. Than more and more features ballooned the project and I ended up spending almost a month working on it (instead of the one afternoon I originally thought). It was a fun learning experience though! For me, this is a really useful tool that I actually use and think is better than any alternative out there.
+In reality I made this because I was about to start learning web development with Flask in uni and I wanted to try it in advance. I was curious :) Then more and more features ballooned the project and I ended up spending almost a month working on it (instead of the one afternoon I originally thought). It was a fun learning experience though! For me, this is a really useful tool that I actually use and think is better than any alternative out there.
 For my personal needs, this is a complete product, however you cannot make a Druid conveniently, using the Class Resources editor for Wild Shape. This is because I do not understand how it works and I didn't want to just hack it in with an LLM. 
-If anyone ever reads this: Hi!
+If anyone ever reads this: Hi, if you want me to add Druids send me a message and I'll find the time :)
