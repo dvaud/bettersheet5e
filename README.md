@@ -1,3 +1,6 @@
+
+<img width="11964" height="7572" alt="showcase-4x" src="https://github.com/user-attachments/assets/fb8d859b-c2bb-4eff-8182-3bca39af7900" />
+
 # bettersheet5e
 The form is live on [https://bettersheet.onrender.com/](https://bettersheet.onrender.com/). It might take a minute to load up.
 # Introduction
