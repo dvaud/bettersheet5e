@@ -18,6 +18,9 @@ For more advanced parties this is also useful, as the more integrated and offici
 - Homebrew content;
 - Adding custom lore to items, spells, weapons.
 
+<img width="2988" height="726" alt="image" src="https://github.com/user-attachments/assets/c801c7b3-39c7-452c-8d9d-21c58a54501c" />
+
+
 # How it works
 After you fill out the form, a HTML template is generated and it downloads. **The HTML file can be opened locally in your browsers, or it could be uploaded online for free** (see recommended use).
 It is recommended that you fill out everything in the form to have the full experience, but the flexibility of the generator allows you to input just the bare minimum if you are in a hurry. As a DM, I sometimes create a barebones sheet for NPC-s, to help me remember them later and to have its stats ready in one place if I need it in an instant.
