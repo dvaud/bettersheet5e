@@ -2,7 +2,7 @@
 The form is live on [https://bettersheet.onrender.com/](https://bettersheet.onrender.com/). It might take a minute to load up.
 # Introduction
 This is a minimalistic, easy to use, modular and beginner friendly online character sheet creator for Dungeons and Dragons 5th edition.
-With this form you are able to generate semi-dynamic character sheets with an intuitive design, clickable elements, with as much or as little explanation as your table requires it. _It is possible to **make a good looking, full character sheet under a minute.**_ I created this for my beginner DnD party because I wanted them to be able to:
+With this form you are able to generate semi-dynamic character sheets with an intuitive design, clickable elements, with as much or as little explanation as your table requires it. _It is possible to **make a good looking, full digital character sheet under a minute.**_ I created this for my beginner DnD party because I wanted them to be able to:
 
 - Have a clean and simple overview of their character sheets;
 - Not worry about keeping a crumpled up piece of paper;
