@@ -35,13 +35,13 @@ When I create full player character sheets using this tool, I usually note the n
 ## Recommended use
 As I mentioned before it is perfectly reasonable for everyone to have their character sheets on their own computer that can be opened locally in their browser. However, I like for my party to have a central hub for all of their character sheets that everyone can access online on their computer, tablet or phone at all times. _(Note: Do this only if there are no secret character features are planned that would be spoiled if the party could see each others' sheets. Check with the others first.)_
 ### Option 1: Staying local
-This is the easier, more traditional route. After downloading the HTML file you are able to open it within any browser of your choice. 
+This is the easier, more traditional route. After downloading the HTML file you made on [bettersheet.onrender.com](https://bettersheet.onrender.com/), you are able to open it within any browser of your choice. 
 ### Option 2: Going Online
 There is more initial setup needed for this option, but it should not take over 15 minutes even if you have never done anything like this before. **I will take you through a click by click guide for complett beginners.**
 
 1. Create a new folder on your computer. For better organisation all of your downloaded files should go here for now.
 2. Withing the files you will find an `index-template.html` template. Download it into your folder and **_change the name from `index-template.html` to `index.html`!_**
-3. Using the creator form make your character sheets that you will want to upload. Place them in the same folder as `index.html`.
+3. Using the [creator form](https://bettersheet.onrender.com/) make your character sheets that you will want to upload. Place them in the same folder as `index.html`.
 
 _Now we will need to point `index.html` to the character sheets._
 
