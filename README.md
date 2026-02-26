@@ -17,7 +17,7 @@ For more advanced parties this is also useful, as the more integrated and offici
 - Homebrew content;
 - Adding custom lore to items, spells, weapons.
 
-<img width="6048" height="3928" alt="13285" src="https://github.com/user-attachments/assets/05b1987a-3fe5-4a33-8bb7-ea0ef9e69107" />
+<img width="6047" height="3219" alt="showcase2_upscayl_2x_ultrasharp-4x" src="https://github.com/user-attachments/assets/8ac4cd13-86e2-40d2-9737-7dafe3998fc0" />
 
 
 # How it works
