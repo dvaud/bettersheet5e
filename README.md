@@ -26,7 +26,8 @@ After you fill out the form, a HTML template is generated and it downloads. **Th
 It is recommended that you fill out everything in the form to have the full experience, but the flexibility of the generator allows you to input just the bare minimum if you are in a hurry. As a DM, I sometimes create a barebones sheet for NPC-s, to help me remember them later and to have its stats ready in one place if I need it in an instant.
 **It is also possible to load a previously generated character sheet back into the form.** This is important for level ups, losing or receiving items, correcting mistakes without having to restart the creation process.
 
-<img width="2836" height="1892" alt="image" src="https://github.com/user-attachments/assets/821be717-e947-4119-96f3-e0f13e4daea6" />
+<img width="2005" height="1882" alt="image" src="https://github.com/user-attachments/assets/e518b3f0-762a-40ca-8f8f-f6e3d82504ff" />
+
 
 
 ## Recommended creation flow
