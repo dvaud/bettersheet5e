@@ -1,4 +1,3 @@
-
 <img width="11964" height="7572" alt="showcase-4x" src="https://github.com/user-attachments/assets/fb8d859b-c2bb-4eff-8182-3bca39af7900" />
 
 # bettersheet5e
@@ -18,7 +17,6 @@ For more advanced parties this is also useful, as the more integrated and offici
 - Homebrew content;
 - Adding custom lore to items, spells, weapons.
 
-
 <img width="6048" height="3928" alt="13285" src="https://github.com/user-attachments/assets/05b1987a-3fe5-4a33-8bb7-ea0ef9e69107" />
 
 
@@ -26,7 +24,6 @@ For more advanced parties this is also useful, as the more integrated and offici
 After you fill out the form, a HTML template is generated and it downloads. **The HTML file can be opened locally in your browsers, or it could be uploaded online for free** (see recommended use).
 It is recommended that you fill out everything in the form to have the full experience, but the flexibility of the generator allows you to input just the bare minimum if you are in a hurry. As a DM, I sometimes create a barebones sheet for NPC-s, to help me remember them later and to have its stats ready in one place if I need it in an instant.
 **It is also possible to load a previously generated character sheet back into the form.** This is important for level ups, losing or receiving items, correcting mistakes without having to restart the creation process.
-
 
 <img width="2005" height="1882" alt="image" src="https://github.com/user-attachments/assets/e518b3f0-762a-40ca-8f8f-f6e3d82504ff" />
 
