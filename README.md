@@ -38,7 +38,7 @@ As I mentioned before it is perfectly reasonable for everyone to have their char
 ### Option 1: Staying local
 This is the easier, more traditional route. After downloading the HTML file you made on [bettersheet.onrender.com](https://bettersheet.onrender.com/), you are able to open it within any browser of your choice. 
 ### Option 2: Going Online
-There is more initial setup needed for this option, but it should not take over 15 minutes even if you have never done anything like this before. **I will take you through a click by click guide for complett beginners.**
+There is more initial setup needed for this option, but it should not take over 15 minutes even if you have never done anything like this before. **I will take you through a click by click guide for complete beginners.**
 
 1. Create a new folder on your computer. For better organisation all of your downloaded files should go here for now.
 2. Withing the files you will find an `index-template.html` template. Download it into your folder and **_change the name from `index-template.html` to `index.html`!_**
