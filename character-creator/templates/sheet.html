@@ -1,9 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ data.name }}'s Character Sheet</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+
     <style>
         :root {
             --primary: #2c3e50;
@@ -416,7 +419,7 @@
                 <div class="resource-banner">
                     <span class="resource-name">{{ feature.name | upper }} (MAX)</span>
                     <span class="resource-value">{{ feature.max }}</span>
-                    <span class="resource-desc">{{ feature.desc }}</span>
+                    <span class="resource-desc">{{ feature.desc | safe  }}</span>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -441,7 +444,7 @@
                 <div class="resource-banner">
                     <span class="resource-name">{{ feature.name | upper }} (MAX)</span>
                     <span class="resource-value">{{ feature.max }}</span>
-                    <span class="resource-desc">{{ feature.desc }}</span>
+                    <span class="resource-desc">{{ feature.desc | safe }}</span>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -485,43 +488,42 @@
                     </details>
                 {% endif %}
             {% endfor %}
-
-
         </div>
-
-        {% if data.spell_slots %}
-            <div id="spell-section">
-                <h3>Spellcasting</h3>
-                <div class="spell-guide-container">
-                    <div class="guide-box">
-                        <span class="guide-title">Spell Save DC</span>
-                        <div class="formula-row">
-                            <div class="guide-shape shape-static">8</div>
-                            <span class="math-sign">+</span>
-                            <div class="guide-shape shape-diamond"><span>{{ data.spellcast_ab }}</span></div>
-                            <span class="math-sign">+</span>
-                            <div class="guide-shape shape-circle"><span>{{ data.proficiency }}</span></div>
-                        </div>
-                        <p class="guide-label">Your enemy has to reach this target number when <u>defending against your spell</u>.<br>(<strong>8</strong> + Ability + Proficiency)</p>
+    
+    {% if data.spells %}
+        <div id="spell-section">
+            <h3>Spellcasting</h3>
+            <div class="spell-guide-container">
+                <div class="guide-box">
+                    <span class="guide-title">Spell Save DC</span>
+                    <div class="formula-row">
+                        <div class="guide-shape shape-static">8</div>
+                        <span class="math-sign">+</span>
+                        <div class="guide-shape shape-diamond"><span>{{ data.spellcast_ab }}</span></div>
+                        <span class="math-sign">+</span>
+                        <div class="guide-shape shape-circle"><span>{{ data.proficiency }}</span></div>
                     </div>
-
-                    <div class="guide-box" style="border-left: 2px dashed #dce4ec; padding-left: 15px;">
-                        <span class="guide-title">Spell Attack (To-Hit)</span>
-                        <div class="formula-row">
-                            <div class="guide-shape shape-d20">D20</div>
-                            <span class="math-sign">+</span>
-                            <div class="guide-shape shape-diamond"><span>{{ data.spellcast_ab }}</span></div>
-                            <span class="math-sign">+</span>
-                            <div class="guide-shape shape-circle"><span>{{ data.proficiency }}</span></div>
-                        </div>
-                        <p class="guide-label">You need to reach this target number when you want <u>to hit with your spell</u>.<br>(<strong>D20</strong> + Ability + Proficiency)</p>
-                    </div>
+                    <p class="guide-label">Your enemy has to reach this target number when <u>defending against your spell</u>.<br>(<strong>8</strong> + Ability + Proficiency)</p>
                 </div>
                 
+                <div class="guide-box" style="border-left: 2px dashed #dce4ec; padding-left: 15px;">
+                    <span class="guide-title">Spell Attack (To-Hit)</span>
+                    <div class="formula-row">
+                        <div class="guide-shape shape-d20">D20</div>
+                        <span class="math-sign">+</span>
+                        <div class="guide-shape shape-diamond"><span>{{ data.spellcast_ab }}</span></div>
+                        <span class="math-sign">+</span>
+                        <div class="guide-shape shape-circle"><span>{{ data.proficiency }}</span></div>
+                    </div>
+                    <p class="guide-label">You need to reach this target number when you want <u>to hit with your spell</u>.<br>(<strong>D20</strong> + Ability + Proficiency)</p>
+                </div>
+            </div>
+            
+            {% if data.spell_slots %}
                 <div class="notes-container" id="slots-container" style="margin-bottom: 15px; text-align:center;">
                     
                     <h4 style="color: var(--accent); margin-bottom: 5px; text-transform: uppercase;">Daily Spell Slots</h4>
-                    <p style="font-size: 0.8rem; color: #888; font-style: italic;">Ennyi Spell használható fel szintenként minden nap.</p>
+                    <p style="font-size: 0.8rem; color: #888; font-style: italic;">You can use this many Spells of each level after a Long Rest<br>Cantrips can be used any amount of times.</p>
                     
                     <div class="slots-wrapper">
                         {% if data.spell_slots["1"] %}
@@ -580,13 +582,15 @@
                         {% endif %}
                     </div>
                 </div>
+            {% endif %}
+
                 <div id="spells-container">
 
                     {% for spell in data.spells %}
                         <details>
                             <summary>
                                 <span>{{ spell.name }}</span>
-                                {% if spell.level == 0 %}
+                                {% if spell.level | int == 0 %}
                                     <span class="badge type-cantrip">CANTRIP</span>   
                                 {% else %}
                                     <span class="badge type-spell">LVL {{ spell.level }}</span>
@@ -609,6 +613,7 @@
                 </div>
             </div>
         {% endif %}
+
         <h3>Inventory</h3>
         <div id="inventory-container">
             {% for item in data.inventory %}
@@ -619,7 +624,7 @@
                 </summary>
                 
                 <div class="content">
-                    <span>{{ item.desc }}</span>
+                    <span>{{ item.desc | safe }}</span>
                 </div>
             </details>
             {% endfor %}
