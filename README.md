@@ -41,8 +41,8 @@ This is the easier, more traditional route. After downloading the HTML file you 
 There is more initial setup needed for this option, but it should not take over 15 minutes even if you have never done anything like this before. **I will take you through a click by click guide for complete beginners.**
 
 1. Create a new folder on your computer. For better organisation all of your downloaded files should go here for now.
-2. Withing the files you will find an `index-template.html` template. Download it into your folder and **_change the name from `index-template.html` to `index.html`!_**
-3. Using the [creator form](https://bettersheet.onrender.com/) make your character sheets that you will want to upload. Place them in the same folder as `index.html`.
+2. Within the files you will find an `index-template.html` template. Download it into your folder and **_change the name from `index-template.html` to `index.html`!_**
+3. Using the [creator form](https://bettersheet.onrender.com/) make your character sheets that you would want to upload. Place them in the same folder as `index.html`.
 
 _Now we will need to point `index.html` to the character sheets._
 
@@ -66,13 +66,13 @@ _For the next steps, you will need a GitHub account._
 <img width="750" height="370" alt="image" src="https://github.com/user-attachments/assets/57cce722-9a32-4e0e-a1d5-7274cde6284a" />
 
 
-7. ...and commit the changes. _(Make sure again that the filename of_ `index-tempplate.html` _was changed properly to_ `index.html`_.)_
+7. ...and commit the changes. _(Make sure again that the filename of_ `index-template.html` _was changed properly to_ `index.html`_.)_
 
 
 <img width="750" height="346" alt="image" src="https://github.com/user-attachments/assets/d352fa84-cd47-4e70-82f3-efa8a4635a19" />
 
 
-_Now that your files live online, you can decide to keep them on your computer or delete them. For the next steps, you will need a Netlify account. You can even sign up with your new GitHub account._
+_Now that your files live online, you can decide to keep them on your computer or delete the folder. For the next steps, you will need a Netlify account. You can even sign up with your new GitHub account._
 
 8. After logging in, create your first 'Team' for free and click 'Add New Project'. Since we created the GitHub repository with your files, you should select 'Import from an existing project'.
 
