@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, make_response
 from bs4 import BeautifulSoup
 import math
@@ -153,9 +154,10 @@ def character_sheet():
                     char_data["image"] = saved_data.get("image", "")
                     
                     # Vitals
-                    char_data["vitals"]["hp"] = saved_data.get("hp", 1)
-                    char_data["vitals"]["ac"] = saved_data.get("ac", 10)
-                    char_data["vitals"]["speed"] = saved_data.get("speed", 30)
+                    vitals_data = saved_data.get("vitals", {})
+                    char_data["vitals"]["hp"] = vitals_data.get("hp", 1)
+                    char_data["vitals"]["ac"] = vitals_data.get("ac", 10)
+                    char_data["vitals"]["speed"] = vitals_data.get("speed", 30)
                     char_data["initiative"] = saved_data.get("initiative", 0)
                     char_data["spellcast_ab"] = saved_data.get("spellcast_ab", "WIS")
                     
